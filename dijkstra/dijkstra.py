@@ -5,11 +5,11 @@ def dijkstra_prunning(graph, weight, source, target):
     d = {}
     B = float('inf')
     pq = PriorityQueue()
-    pq.insert(source, 0)  # TODO: create this method in PriorityQueue
+    pq.insert(source, 0)
     d[source] = 0
 
-    while not pq.empty():  # TODO: create this method in PriorityQueue
-        u = pq.remove_min()  # TODO: create this method in PriorityQueue
+    while not pq.empty():
+        u = pq.remove_min()
         if u == target:
             break
         for v in graph[u]:
@@ -28,7 +28,7 @@ def relax(v, tent):
         if d[v] == float('inf'):
             pq.insert(v, tent)
         else:
-            pq.decrease_key(v, tent)  # TODO: create this method in PriorityQueue
+            pq.decrease_key(v, tent)
         d[v] = tent
 
 
@@ -39,12 +39,12 @@ def dijkstra_prediction(graph, weight, source, target, i0, alpha):
     X = []
     i = 0
     pq = PriorityQueue()
-    pq.insert(source, 0)  # TODO: create this method in PriorityQueue
+    pq.insert(source, 0)
     d[source] = 0
     R = set()
 
-    while not pq.empty() and pq.min_prio() <= P:  # TODO: create this methods in PriorityQueue
-        u = pq.remove_min()  # TODO: create this method in PriorityQueue
+    while not pq.empty() and pq.min_prio() <= P:
+        u = pq.remove_min()
         if u == target:
             break
         i += 1
@@ -69,22 +69,22 @@ def smart_restart(P, R):
     for v in R:
         if d[v] <= min(B, P):
             R.remove(v)
-            pq.insert(v, d[v])  # TODO: create this method in PriorityQueue
+            pq.insert(v, d[v])
 
 
 def relax_smart(v, tent, P):
     if d[v] > tent:
         if d[v] == float('inf'):
             if tent <= P:
-                pq.insert(v, tent)  # TODO: create this method in PriorityQueue
+                pq.insert(v, tent)
             else:
                 R.add(v)
         else:
             if tent not in R:
-                pq.decrease_prio(v, tent)  # TODO: create this method in PriorityQueue
+                pq.decrease_prio(v, tent)
             else:
                 if tent <= P:
                     return
                 R.remove(v)
-                pq.insert(v, tent)  # TODO: create this method in PriorityQueue
+                pq.insert(v, tent)
         d[v] = tent
