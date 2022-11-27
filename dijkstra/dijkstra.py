@@ -1,29 +1,29 @@
 from priority_queue.priority_queue import PriorityQueue
 
 
-def dijkstra_prunning(graph, weight, source, target):
-    d = {}
+def dijkstra_prunning(graph, source, targets):
+    d = {v: float('inf') for v in graph.get_vertices()}
+    d[source] = 0
     B = float('inf')
     pq = PriorityQueue()
-    pq.insert(source, 0)
-    d[source] = 0
+    pq.insert(source, d[source])
 
     while not pq.empty():
         u = pq.remove_min()
-        if u == target:
+        if u in targets:
             break
-        for v in graph[u]:
-            tent = d[u] + weight(u, v)
+        for (u, v) in graph.get_edges():
+            tent = d[u] + graph.get_weight(u, v)
             if tent > B:
                 continue
-            if v == target:
-                B = min(tent, B)
-            relax(v, tent)
+            if v in targets:
+                B = min(B, tent)
+            relax(d, v, tent, pq)
 
-    return d[target]
+    return d
 
 
-def relax(v, tent):
+def relax(d, v, tent, pq):
     if d[v] > tent:
         if d[v] == float('inf'):
             pq.insert(v, tent)
@@ -32,39 +32,39 @@ def relax(v, tent):
         d[v] = tent
 
 
-def dijkstra_prediction(graph, weight, source, target, i0, alpha):
-    d = {}
+def dijkstra_prediction(graph, source, targets, i0, alpha, beta):
+    d = {v: float('inf') for v in graph.get_vertices()}
+    d[source] = 0
     B = float('inf')
     P = float('inf')
     X = []
     i = 0
     pq = PriorityQueue()
-    pq.insert(source, 0)
-    d[source] = 0
+    pq.insert(source, d[source])
     R = set()
 
     while not pq.empty() and pq.min_prio() <= P:
         u = pq.remove_min()
-        if u == target:
+        if u in targets:
             break
         i += 1
         if i <= i0:
-            X[i] = (d[u], B)
+            X.append(d[u])
         if i == i0:
             P = alpha * prediction(X)
-        for v in graph[u]:
-            tent = d[u] + weight(u, v)
+        for (u, v) in graph.get_edges():
+            tent = d[u] + graph.get_weight(u, v)
             if tent > min(B, P):
                 continue
-            if v == target:
+            if v in targets:
                 B = min(B, tent)
-            relax_smart(v, tent, P)
-        smart_restart(P, R)
+            relax_smart(v, tent, P, d, R, pq)
+        smart_restart(P, R, beta, d, B, pq)
 
-    return d[target]
+    return d
 
 
-def smart_restart(P, R):
+def smart_restart(P, R, beta, d, B, pq):
     P = beta * P
     for v in R:
         if d[v] <= min(B, P):
@@ -72,7 +72,7 @@ def smart_restart(P, R):
             pq.insert(v, d[v])
 
 
-def relax_smart(v, tent, P):
+def relax_smart(v, tent, P, d, R, pq):
     if d[v] > tent:
         if d[v] == float('inf'):
             if tent <= P:
@@ -88,3 +88,7 @@ def relax_smart(v, tent, P):
                 R.remove(v)
                 pq.insert(v, tent)
         d[v] = tent
+
+
+def prediction(X):
+    return sum(X) / len(X)
