@@ -1,5 +1,9 @@
 from priority_queue.priority_queue import PriorityQueue
 
+# DIJKSTRA_PRUNNING
+# Tem o mesmo funcionamento do Dijkstra, porém rastreia um limite superior 'B' na distancia de caminho mais
+# curto para um nó em T. B tende a infinito e vai diminuindo esse limite toda vez que um caminho mais curto
+# para um nó em T encontrado.
 
 def dijkstra_prunning(graph, source, targets):
     d = {v: float('inf') for v in graph.get_vertices()}
@@ -24,13 +28,18 @@ def dijkstra_prunning(graph, source, targets):
 
 
 def relax(d, v, tent, pq):
-    if d[v] > tent:
-        if d[v] == float('inf'):
-            pq.insert(v, tent)
+    if d[v] > tent:                       # menor distância provisória
+        if d[v] == float('inf'):          
+            pq.insert(v, tent)            # adiciona 'v' para a PriorityQueue
         else:
-            pq.decrease_key(v, tent)
-        d[v] = tent
+            pq.decrease_key(v, tent)      # diminui a prioridade de 'v'
+        d[v] = tent                       # atualiza a distância de 'v'
 
+
+# DIJKSTRA_PREDICTION
+# Durante as primeiras i0 iterações, um array X é criado para armazenar o "traço" do algoritmo.
+# Na iteração i0, o "traço" criado X é usado para computar uma predição inicial chamando o procedimento PREDICITON.
+# X[i] armazena o par (d(u), B), que consiste na distância do nó estabelecido u e o valor limite superior B na iteração i.
 
 def dijkstra_prediction(graph, source, targets, i0, alpha, beta):
     d = {v: float('inf') for v in graph.get_vertices()}
@@ -63,6 +72,11 @@ def dijkstra_prediction(graph, source, targets, i0, alpha, beta):
 
     return d
 
+# SMART_RESTART
+# Esse procedimento é criado caso a previsão P for muito pequena, onde ela vai ser aumentada e o algoritmo
+# continua com a nova previsão.
+# OBS: A utilização desse procedimento não deve acontecer com muita frequencia, uma vez que pode reduzir a 
+# eficiência do algoritmo.
 
 def smart_restart(P, R, beta, d, B, pq):
     P = beta * P
