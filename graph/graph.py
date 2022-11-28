@@ -18,5 +18,5 @@ class Graph:
     def get_weight(self, vertex_a, vertex_b):
         try:
             return self.dict_graph[(vertex_a, vertex_b)]
-        except KeyError:  # can be better
+        except KeyError:
             return "edge not found"
