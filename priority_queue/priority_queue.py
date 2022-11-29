@@ -13,7 +13,7 @@ class PriorityQueue:
     def remove_min(self):
         return heapq.heappop(self._queue)[-1]
 
-    def decrease_key(self, item, priority):
+    def decrease_prio(self, item, priority):
         for i, (p, _, it) in enumerate(self._queue):
             if it == item:
                 self._queue[i] = (priority, self._index, item)

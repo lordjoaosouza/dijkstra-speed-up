@@ -33,7 +33,7 @@ def relax(d, v, tent, pq):
         if d[v] == float('inf'):
             pq.insert(v, tent)  # adiciona 'v' para a PriorityQueue
         else:
-            pq.decrease_key(v, tent)  # diminui a prioridade de 'v'
+            pq.decrease_prio(v, tent)  # diminui a prioridade de 'v'
         d[v] = tent  # atualiza a distância de 'v'
 
 
