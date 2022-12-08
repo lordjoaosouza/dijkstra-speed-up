@@ -16,10 +16,4 @@ class Graph:
         return self.dict_graph.keys()
 
     def get_weight(self, vertex_a, vertex_b):
-        try:
-            return self.dict_graph[(vertex_a, vertex_b)]
-        except KeyError:
-            return "edge not found"
-
-    def get_weights(self):
-        return self.dict_graph.values()
+        return self.dict_graph[(vertex_a, vertex_b)]
